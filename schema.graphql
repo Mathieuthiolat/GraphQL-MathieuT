@@ -1,49 +1,61 @@
-enum ColorType {
-   RED
-   BLUE
-   GREEN
-}
 type Query {
-   students:[Student],
-   studentById(id:ID!):Student,
-   college : [College],
-   setFavouriteColor(color:ColorType):String
+   produit:[Produit],
+   utilisateur : [Utilisateur],
    
 }
 
-type Student {
+type Produit {
    id:ID!
-   firstName:String
-   lastName:String
-   fullName:String
-   college:College
+   nom:String
+   description:String  
+   token:String
+   prix:Int
+   stock:Int
+   reference:String
+   created_at:String
+   update_at:String
 }
-
-type College {
+type Utilisateur {
    id:ID!
-   name:String
-   location:String 
-   rating:Float
-   studentsByCollge:[Student]
+   nom:String
+   prenom:String
+   token:String 
+   role:String
+   created_at:String
+   update_at:String
 }
-
 
 
 type Mutation {
-   returnStringByCreateStudent(input:StudentInput!):String,
-   returnObjectByCreateStudent(input:StudentInput!):Student,
-   returnStringUpdateDataSudentById(id:ID!,input:StudentInput!):String
-   returnStudentUpdateDataSudentById(id:ID!,input:StudentInput!):Student
-   returnBooleanDeleteDataSudentById(id:ID!):Boolean
-}
+  returnCreateProduit(
+    nom:String,     
+    description:String,
+    token:String,
+    prix:Int,
+    stock:Int,
+    reference:String,
+    created_at:String,
+    update_at:String
+  ):String,
 
-input StudentInput {
-  collegeId: ID!
-  firstName: String!
-  lastName: String!
-  email: String!
-  password: String!
-  age:Int
+  returnCreateUtilisateur(
+    nom:String,     
+    prenom:String,
+    token:String,
+    role:String,
+    created_at:String,
+    update_at:String
+  ):String,
 }
-
+input UpdateProduit {
+    id:Int!
+	  nom:String,     
+    description:String,
+    token:String,
+    prix:Int,
+    stock:Int,
+    reference:String,
+    created_at:String,
+    update_at:String
+}
 

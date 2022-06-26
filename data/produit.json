@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "nom": "T-shirt",
+    "description": "Blanc",
+    "token": "qDQZdPjk15ZDQNj",
+    "prix": 15,
+    "stock": 2,
+    "reference": "1021",
+    "created_at": "21/06/2022",
+    "update_at": "21/06/2022"
+  },
+  {
+    "id": "r1FCVRr9c",
+    "nom": "savon",
+    "description": "test",
+    "token": "tokentest",
+    "prix": 12,
+    "stock": 2,
+    "reference": "b2",
+    "created_at": "today",
+    "update_at": "today"
+  }
+]

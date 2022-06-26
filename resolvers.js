@@ -1,116 +1,69 @@
 const db = require('./db');
 
 const Query = {
-   students:() => db.students.list(),  
-   college:() => db.colleges.list(),
-   studentById:(root,args,context,info) => {
-      //args will contain parameter passed in query
-      return db.students.get(args.id);
-   },
-  setFavouriteColor:(root,args) => {
-   return  "Your Fav Color is :"+args.color;
-  }
+   produit:() => db.produit.list(),  
+   utilisateur:() => db.utilisateur.list()
 }  
-
-const Student = {
-   fullName:(root,args,context,info) => {
-      return root.firstName+":"+root.lastName
-   },
-   college:(root) => {
-      return db.colleges.get(root.collegeId);
-   }
-}
-
-const College = {  
-    studentsByCollge:(root) => {
-      return   db.students.list().filter(function(item) {
-                      return item.collegeId == root.id;
-              });
-   }
-}
 
 const Mutation = {
   
-   returnStringByCreateStudent:(root,args,context,info) => {
-     
-      const {email,firstName,password} = args.input;
-
-      const emailExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      
-      const isValidEmail =  emailExpression.test(String(email).toLowerCase())
-     
-      if(!isValidEmail){
-
-        throw new Error("Adresse mail non valide ")
-      }     
-
-      if(firstName.length > 15){
-
-        throw new Error("firstName doit comporter moins de 15 caractères")        
-      }      
-
-      if(password.length < 8 ){
-          throw new Error("le mot de passe doit comporter au moins 8 caractères")
-      }    
-      
-      return  db.students.create({collegeId:args.input.collegeId,
-      firstName:args.input.firstName,
-      lastName:args.input.lastName,
-      email:args.input.email,
-      password:args.input.password,
-      age:args.input.age,})
-      
+   returnCreateProduit:(root,args,context,info) => {
+      return db.produit.create({
+        nom:args.nom,
+        description:args.description,
+        token:args.token,
+        prix:args.prix,
+        stock:args.stock,
+        reference:args.reference,
+        created_at:args.created_at,
+        update_at:args.update_at,
+      }) 
    },
-   returnObjectByCreateStudent:(root,args,context,info) => {
-      const id =  db.students.create({collegeId:args.input.collegeId,
-       firstName:args.input.firstName,
-      lastName:args.input.lastName,
-      email:args.input.email,
-      password:args.input.password,
-      age:args.input.age,})
-     return db.students.get(id)
+  updateProduit: (_, { produitId, nom,  description, token, prix, stock, reference, created_at, update_at }) => { 
+     const produit = find(produit, { id: produitId }); 
+     if (!produit) {
+       throw new Error(`Couldn’t find the product with id ${produitId}`);
+     }
+     produit.nom = nom; 
+     produit.description = description; 
+     produit.token = token; 
+     produit.prix = prix; 
+     produit.stock = stock; 
+     produit.reference =reference; 
+     produit.created_at =created_at; 
+     produit.update_at =update_at; 
+     return produit;
+  },
+   returnCreateUtilisateur:(root,args,context,info) => {
+      return db.utilisateur.create({
+        nom:args.nom,
+        prenom:args.prenom,
+        token:args.token,
+        role:args.role,
+        created_at:args.created_at,
+        update_at:args.update_at,
+      }) 
    },
-   returnStringUpdateDataSudentById:(root,args,context,info) => {
-      return args.id+args.input.firstName
+    updateUtilisateur: (_, { utilisateurId, nom,  prenom, token, role,created_at, update_at }) => { 
+     const utilisateur = find(utilisateur, { id: utilisateurId }); 
+     if (!utilisateur) {
+       throw new Error(`Couldn’t find the user with id ${utilisateurId}`);
+     }
+     utilisateur.nom = nom; 
+     utilisateur.prenom = prenom; 
+     utilisateur.token = token; 
+     utilisateur.role = role; 
+     utilisateur.created_at =created_at; 
+     utilisateur.update_at =update_at; 
+     return utilisateur;
+  },
+  returnDeleteProduitById:(root,args,context,info) => {
+      const result = db.produit.delete(args.id); 
+      return true
    },
-   returnStudentUpdateDataSudentById:(root,args,context,info) => {
-       const objectStudent = db.students.get(args.id);
-       if(args.input.firstName!=''){
-
-         objectStudent.firstName = args.input.firstName;
-       }
-
-       if(args.input.email!=''){
-
-         objectStudent.email = args.input.email;
-       }
-
-       if(args.input.age!=''){
-
-         objectStudent.age = args.input.age;
-       }    
-       
-      const result = db.students.update(
-        {
-          id: args.id,
-          firstName:objectStudent.firstName,
-          email: objectStudent.email,
-          age: objectStudent.age,
-          lastName: objectStudent.lastName
-        });
-      return db.students.get(args.id)       
-      
-   },
-   returnBooleanDeleteDataSudentById:(root,args,context,info) => {
-      const result = db.students.delete(args.id); // return null
-     /*if(result){
-       return true;
-     }else{
-       return false;
-     }*/
-     return true
+   returnDeleteUtilisateurById:(root,args,context,info) => {
+      const result = db.utilisateur.delete(args.id); 
+      return true
    },
 }
-
-
-module.exports = {Query,Student, College,Mutation}
+module.exports = {Query,Mutation}
